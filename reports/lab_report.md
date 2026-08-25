@@ -2,8 +2,8 @@
 
 ## 1. Team / student
 
-- **Team Name**: TeamFlash
-- **Repository / Track**: DAY23-Track3-TeamFlash
+- **Student**: Lê Tuấn Cảnh (Mã SV: 2A202601127)
+- **Repository / Track**: DAY23-Track3-2A202601127-LeTuanCanh
 - **Date**: 2026-08-25
 
 ## 2. Architecture

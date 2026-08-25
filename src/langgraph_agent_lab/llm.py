@@ -34,8 +34,8 @@ def get_llm(model: str | None = None, temperature: float = 0.0) -> BaseChatModel
     """
     if os.getenv("GEMINI_API_KEY"):
         try:
-            from langchain_google_genai import (
-                ChatGoogleGenerativeAI,  # type: ignore[import-not-found]
+            from langchain_google_genai import (  # type: ignore[import-not-found]
+                ChatGoogleGenerativeAI,
             )
         except ImportError as exc:
             raise RuntimeError("Install: pip install langchain-google-genai") from exc
