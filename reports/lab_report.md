@@ -1,21 +1,4 @@
-from __future__ import annotations
-
-from pathlib import Path
-
-from .metrics import MetricsReport
-
-
-def render_report(metrics: MetricsReport) -> str:
-    """Render a complete lab report from metrics data."""
-    scenario_rows = []
-    for sm in metrics.scenario_metrics:
-        scenario_rows.append(
-            f"| {sm.scenario_id} | {sm.expected_route} | {sm.actual_route or 'unknown'} | "
-            f"{sm.success} | {sm.retry_count} | {sm.interrupt_count} |"
-        )
-    scenarios_table = "\n".join(scenario_rows)
-
-    return f"""# Day 08 Lab Report — LangGraph Agentic Orchestration
+# Day 08 Lab Report — LangGraph Agentic Orchestration
 
 ## 1. Team / student
 
@@ -85,15 +68,21 @@ immutable contract: they compute updates in local variables and return partial u
 Results collected from `outputs/metrics.json` over 7 evaluation scenarios:
 
 **Summary Metrics:**
-- **Total Scenarios:** {metrics.total_scenarios}
-- **Success Rate:** {metrics.success_rate:.2%}
-- **Avg Nodes Visited:** {metrics.avg_nodes_visited:.2f}
-- **Total Retries:** {metrics.total_retries}
-- **Total Interrupts:** {metrics.total_interrupts}
+- **Total Scenarios:** 7
+- **Success Rate:** 100.00%
+- **Avg Nodes Visited:** 6.43
+- **Total Retries:** 3
+- **Total Interrupts:** 2
 
 | Scenario | Expected route | Actual route | Success | Retries | Interrupts |
 |---|---|---|---:|---:|---:|
-{scenarios_table}
+| S01_simple | simple | simple | True | 0 | 0 |
+| S02_tool | tool | tool | True | 0 | 0 |
+| S03_missing | missing_info | missing_info | True | 0 | 0 |
+| S04_risky | risky | risky | True | 0 | 1 |
+| S05_error | error | error | True | 2 | 0 |
+| S06_delete | risky | risky | True | 0 | 1 |
+| S07_dead_letter | error | error | True | 1 | 0 |
 
 ## 5. Failure analysis
 
@@ -125,7 +114,7 @@ Results collected from `outputs/metrics.json` over 7 evaluation scenarios:
 
 ## 6. Persistence / recovery evidence
 
-- **Thread ID Isolation**: Every run is assigned a unique `thread_id` (`f"thread-{{scenario_id}}"`),
+- **Thread ID Isolation**: Every run is assigned a unique `thread_id` (`f"thread-{scenario_id}"`),
   ensuring independent checkpoint streams.
 - **State History**: Using `graph.get_state_history(config)`, full checkpoint timelines can be
   retrieved (verified with 6 to 10 distinct checkpoint snapshots per scenario run).
@@ -157,11 +146,3 @@ Results collected from `outputs/metrics.json` over 7 evaluation scenarios:
 3. **LLM-as-Judge Tool Evaluation**:
    Upgrade `evaluate_node` from pattern matching to a full LLM-as-judge evaluator that scores tool
    output relevance and completeness before routing to `answer`.
-"""
-
-
-def write_report(metrics: MetricsReport, output_path: str | Path) -> None:
-    """Write the rendered report to a file."""
-    path = Path(output_path)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(render_report(metrics), encoding="utf-8")
